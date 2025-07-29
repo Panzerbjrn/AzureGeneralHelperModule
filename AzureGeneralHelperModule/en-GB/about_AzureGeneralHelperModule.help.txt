@@ -2,16 +2,20 @@ TOPIC
 		about_AzureGeneralHelperModule
 
 SHORT DESCRIPTION
-		Default: A short, one-line description of the topic contents.
+		Generic helprs for working with Azure.
 
 LONG DESCRIPTION
-		Default: A detailed, full description of the subject or purpose of the module.
+		Generic helpers for working with Azure commands and for getting information.
 
 EXAMPLES
-		Default: Examples of how to use the module or how the subject feature works in practice.
+	Displays this help file:
+	Get-Help about_AzureGeneralHelperModule
+
+	Get the list of available commands:
+	Get-Command -Module AzureGeneralHelperModule
 
 KEYWORDS
-		Default: Terms or titles on which you might expect your users to search for the information in this topic.
+		Azure DevOps, Azure, REST API
 
 SEE ALSO
 		Default: Text-only references for further reading. Hyperlinks cannot work in the Windows PowerShell console.

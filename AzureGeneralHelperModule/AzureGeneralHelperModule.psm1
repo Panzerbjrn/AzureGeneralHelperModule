@@ -4,7 +4,7 @@
 #	AUTHOR: Lars Panzerbjørn
 #	GitHub: Panzerbjrn
 #	DATE: 2025.07.27
-#	VERSION: 0.1 - 2025.07.27 - Module Created with Create-NewModuleStructure by Lars Panzerbj�rn
+#	VERSION: 0.1 - 2025.07.27 - Module Created with Create-NewModuleStructure by Lars Panzerbjørn
 #
 #	SYNOPSIS:
 #
@@ -16,7 +16,7 @@
 #
 #endregion Script Header
 
-#Requires -Version 4.0
+#Requires -Version 5.0
 
 [CmdletBinding(PositionalBinding=$false)]
 param()

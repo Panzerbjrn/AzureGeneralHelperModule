@@ -17,7 +17,7 @@ Function List-AzResourceGroups{
 
 	.NOTES
 		Version:			0.1
-		Author:				Lars Panzerbj�rn
+		Author:				Lars Panzerbjørn
 		Creation Date:		2023.10.06
 		Purpose/Change: Initial script development
 #>

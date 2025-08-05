@@ -2,7 +2,7 @@
 #	Thought for the day:
 #	NAME: AzureGeneralHelperModule.psm1
 #	AUTHOR: Lars Panzerbjørn
-#	CONTACT:  / GitHub: Panzerbjrn / Twitter: lpetersson
+#	GitHub: Panzerbjrn
 #	DATE: 2025.07.27
 #	VERSION: 0.1 - 2025.07.27 - Module Created with Create-NewModuleStructure by Lars Panzerbj�rn
 #

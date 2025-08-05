@@ -1,10 +1,9 @@
 #region Script Header
-#	Thought for the day:
 #	NAME: AzureGeneralHelperModule.psm1
 #	AUTHOR: Lars Panzerbjørn
 #	GitHub: Panzerbjrn
-#	DATE: 2025.07.27
-#	VERSION: 0.1 - 2025.07.27 - Module Created with Create-NewModuleStructure by Lars Panzerbjørn
+#	DATE: 2023.10.05
+#	VERSION: 0.1 - 2023.10.05 - Module Created with Create-NewModuleStructure by Lars Panzerbjørn
 #
 #	SYNOPSIS:
 #
@@ -18,7 +17,7 @@
 
 #Requires -Version 5.0
 
-[CmdletBinding(PositionalBinding=$false)]
+[CmdletBinding(PositionalBinding=$False)]
 param()
 
 Write-Verbose $PSScriptRoot

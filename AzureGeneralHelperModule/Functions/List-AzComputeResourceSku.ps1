@@ -42,15 +42,15 @@ Function List-AzComputeResourceSku {
     Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
     IF((!$AzLocation) -and ($Ask)){
-        $menu = @{}
+        $Menu = @{}
         $Items =  Get-AzLocation | select DisplayName | Sort -Property DisplayName
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].DisplayName)"
-            $menu.Add($i,($Items[$i-1].DisplayName))
+            $Menu.Add($i,($Items[$i-1].DisplayName))
             }
 
         [int]$ans = Read-Host 'Enter selection'
-        $AzLocation = $menu.Item($ans)
+        $AzLocation = $Menu.Item($ans)
     }
 
     IF($AzLocation){

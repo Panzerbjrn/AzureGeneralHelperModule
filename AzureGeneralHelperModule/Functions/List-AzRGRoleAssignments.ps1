@@ -61,26 +61,26 @@ Function List-AzRGRoleAssignments {
         $AzRoleAssignments = Get-AzRoleAssignment
     }
     IF($Ask){
-        $menu = @{}
+        $Menu = @{}
         $Items =  Get-AzSubscription | select Name,Id | Sort -Property Name
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].Name)"
-            $menu.Add($i,($Items[$i-1]))
+            $Menu.Add($i,($Items[$i-1]))
             }
 
         [int]$ans = Read-Host 'Enter selection'
-        $AzSub = $menu.Item($ans)
-        Set-AzContext -Subscription $menu.Item($ans).Name
+        $AzSub = $Menu.Item($ans)
+        Set-AzContext -Subscription $Menu.Item($ans).Name
 
-        $menu = @{}
+        $Menu = @{}
         $Items =  Get-AzResourceGroup | select ResourceGroupName,ResourceId | Sort -Property ResourceGroupName
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].ResourceGroupName)"
-            $menu.Add($i,($Items[$i-1]))
+            $Menu.Add($i,($Items[$i-1]))
             }
 
         [int]$ans = Read-Host 'Enter selection'
-        $AZRG = $menu.Item($ans).ResourceGroupName
+        $AZRG = $Menu.Item($ans).ResourceGroupName
 
         $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)/resourceGroups/$AZRG" |
         Where-Object { -not $_.Inherited }

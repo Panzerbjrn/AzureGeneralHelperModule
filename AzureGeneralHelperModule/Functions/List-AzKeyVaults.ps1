@@ -46,15 +46,15 @@ Function List-AzKeyVaults {
         }
     }
     ELSEIF($Ask){
-        $menu = @{}
+        $Menu = @{}
         $Items =  Get-AzSubscription | select Name,Id | Sort -Property Name
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].Name)"
-            $menu.Add($i,($Items[$i-1]))
+            $Menu.Add($i,($Items[$i-1]))
             }
 
         [int]$ans = Read-Host 'Enter selection'
-        $AzSub = $menu.Item($ans)
+        $AzSub = $Menu.Item($ans)
 
         Write-OutPut $AzSub.Name
         Write-OutPut $AzSub.Id

@@ -50,15 +50,15 @@ Function List-AzStorageAccounts {
         }
 
 		IF(!$AzResourceGroup){
-			$menu = @{}
+			$Menu = @{}
         	$RGs = Get-AzResourceGroup | Sort-Object -Property ResourceGroupName
 			for ($i=1;$i -le $RGs.count; $i++) {
 				Write-Host "$i. $($RGs[$i-1].ResourceGroupName)"
-				$menu.Add($i,($RGs[$i-1].ResourceGroupName))
+				$Menu.Add($i,($RGs[$i-1].ResourceGroupName))
 				}
 
 			[int]$ans = Read-Host 'Enter selection'
-			$AzResourceGroup = $menu.Item($ans)
+			$AzResourceGroup = $Menu.Item($ans)
 		}
 
 		Get-AzStorageAccount -ResourceGroupName $AzResourceGroup | Select-Object -ExpandProperty StorageAccountName

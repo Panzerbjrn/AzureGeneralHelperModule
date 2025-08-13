@@ -64,43 +64,43 @@ Function List-AzContainerContents{
         }
 
 		IF(!$AzResourceGroup){
-			$menu = @{}
+			$Menu = @{}
         	$Items = Get-AzResourceGroup | Sort-Object -Property ResourceGroupName
 			for ($i=1;$i -le $Items.count; $i++) {
 				Write-Host "$i. $($Items[$i-1].ResourceGroupName)"
-				$menu.Add($i,($Items[$i-1].ResourceGroupName))
+				$Menu.Add($i,($Items[$i-1].ResourceGroupName))
 				}
 
 			[int]$ans = Read-Host 'Enter selection'
-			$AzResourceGroup = $menu.Item($ans)
+			$AzResourceGroup = $Menu.Item($ans)
 		}
 
         IF($AzStorageAccount){$AzStorageAccount = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount}
 		IF(!$AzStorageAccount){
-			$menu = @{}
+			$Menu = @{}
         	$Items = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup | Sort-Object -Property StorageAccountName
 			for ($i=1;$i -le $Items.count; $i++) {
 				Write-Host "$i. $($Items[$i-1].StorageAccountName)"
-				$menu.Add($i,($Items[$i-1].StorageAccountName))
+				$Menu.Add($i,($Items[$i-1].StorageAccountName))
 			}
 
 			[int]$ans = Read-Host 'Enter selection'
-			$AzStorageAccount = $menu.Item($ans)
+			$AzStorageAccount = $Menu.Item($ans)
 		}
 
         IF($AzStoragecontainer){
             $AzStoragecontainer = Get-AzStorageContainer -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context -Name $AzStoragecontainer | Select-Object -ExpandProperty Name
         }
         IF(!$AzStoragecontainer){
-			$menu = @{}
+			$Menu = @{}
         	$Items = Get-AzStorageContainer -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context | Sort-Object -Property Name
 			for ($i=1;$i -le $Items.count; $i++) {
 				Write-Host "$i. $($Items[$i-1].Name)"
-				$menu.Add($i,($Items[$i-1].Name))
+				$Menu.Add($i,($Items[$i-1].Name))
 			}
 
 			[int]$ans = Read-Host 'Enter selection'
-			$AzStoragecontainer = $menu.Item($ans)
+			$AzStoragecontainer = $Menu.Item($ans)
 		}
 
 

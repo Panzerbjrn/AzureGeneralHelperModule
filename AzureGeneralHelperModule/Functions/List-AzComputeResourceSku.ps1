@@ -18,8 +18,6 @@ Function List-AzComputeResourceSku {
 	.NOTES
 		Version:			0.1
 		Author:				Lars Panzerbjørn
-		Creation Date:		2023.10.06
-		Purpose/Change:     Initial script development
 #>
 	[CmdletBinding()]
 	param(
@@ -43,7 +41,7 @@ Function List-AzComputeResourceSku {
 
     IF((!$AzLocation) -and ($Ask)){
         $Menu = @{}
-        $Items =  Get-AzLocation | select DisplayName | Sort -Property DisplayName
+        $Items =  Get-AzLocation | Select-Object DisplayName | Sort-Object -Property DisplayName
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].DisplayName)"
             $Menu.Add($i,($Items[$i-1].DisplayName))

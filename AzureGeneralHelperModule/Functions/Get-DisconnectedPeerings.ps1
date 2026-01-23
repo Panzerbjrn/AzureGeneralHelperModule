@@ -30,14 +30,14 @@ Function Get-DisconnectedPeerings {
 	param
 	(
 		[Parameter(
-			Mandatory = $true,
+			Mandatory,
 			ValueFromPipeline=$True,
 			ValueFromPipelineByPropertyName=$True,
 			HelpMessage='Name of the virtual network to check for disconnected peerings')]
 		[string]$VirtualNetworkName,
 
 		[Parameter(
-			Mandatory = $true,
+			Mandatory,
 			ValueFromPipeline=$True,
 			ValueFromPipelineByPropertyName=$True,
 			HelpMessage='Resource group name containing the virtual network')]

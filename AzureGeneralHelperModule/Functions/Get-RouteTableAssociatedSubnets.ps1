@@ -42,13 +42,13 @@ function Get-RouteTableAssociatedSubnets {
 
     [CmdletBinding(DefaultParameterSetName = 'ByName')]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'ByName')]
+        [Parameter(Mandatory, ParameterSetName = 'ByName')]
         [string]$RouteTableName,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'ByName')]
+        [Parameter(Mandatory, ParameterSetName = 'ByName')]
         [string]$ResourceGroupName,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'ByObject', ValueFromPipeline = $true)]
+        [Parameter(Mandatory, ParameterSetName = 'ByObject', ValueFromPipeline = $true)]
         [Microsoft.Azure.Commands.Network.Models.PSRouteTable]$RouteTable,
 
         [Parameter(

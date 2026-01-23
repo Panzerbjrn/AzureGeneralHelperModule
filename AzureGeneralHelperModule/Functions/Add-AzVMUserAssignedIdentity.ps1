@@ -50,7 +50,7 @@ function Add-AzVMUserAssignedIdentity {
     [CmdletBinding(DefaultParameterSetName = 'ByName')]
     param(
         [Parameter(
-            Mandatory = $true,
+            Mandatory,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'Name of the Virtual Machine')]
@@ -58,7 +58,7 @@ function Add-AzVMUserAssignedIdentity {
         [string]$VMName,
 
         [Parameter(
-            Mandatory = $true,
+            Mandatory,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'Which Azure resource group would you like to target?')]
@@ -66,7 +66,7 @@ function Add-AzVMUserAssignedIdentity {
         [string]$ResourceGroupName,
 
         [Parameter(
-            Mandatory = $true,
+            Mandatory,
             ParameterSetName = 'ByName',
             HelpMessage = 'Name of the user-assigned managed identity')]
         [string]$IdentityName,
@@ -77,7 +77,7 @@ function Add-AzVMUserAssignedIdentity {
         [string]$IdentityResourceGroup,
 
         [Parameter(
-            Mandatory = $true,
+            Mandatory,
             ParameterSetName = 'ByResourceId',
             HelpMessage = 'Full resource ID of the user-assigned managed identity')]
         [string]$IdentityResourceId,

@@ -1,6 +1,6 @@
 function Get-VMPrivateIpAddress {
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [string]$VMName
     )
 

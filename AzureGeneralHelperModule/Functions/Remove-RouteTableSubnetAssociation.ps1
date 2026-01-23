@@ -52,21 +52,21 @@ Function Remove-RouteTableSubnetAssociation {
 	param
 	(
 		[Parameter(
-			Mandatory = $true,
+			Mandatory,
 			ValueFromPipeline = $True,
 			ValueFromPipelineByPropertyName = $True,
 			HelpMessage = 'Name of the virtual network containing the subnet')]
 		[string]$VirtualNetworkName,
 
 		[Parameter(
-			Mandatory = $true,
+			Mandatory,
 			ValueFromPipeline = $True,
 			ValueFromPipelineByPropertyName = $True,
 			HelpMessage = 'Name of the subnet to remove the Route Table association from')]
 		[string]$SubnetName,
 
 		[Parameter(
-			Mandatory = $true,
+			Mandatory,
 			ValueFromPipeline = $True,
 			ValueFromPipelineByPropertyName = $True,
 			HelpMessage = 'Resource group name containing the virtual network')]

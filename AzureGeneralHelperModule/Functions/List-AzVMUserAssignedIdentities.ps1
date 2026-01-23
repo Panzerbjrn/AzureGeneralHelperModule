@@ -36,7 +36,7 @@ function List-AzVMUserAssignedIdentities {
     [CmdletBinding()]
     param(
         [Parameter(
-            Mandatory = $true,
+            Mandatory,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'Name of the Virtual Machine')]
@@ -44,7 +44,7 @@ function List-AzVMUserAssignedIdentities {
         [string]$VMName,
 
         [Parameter(
-            Mandatory = $true,
+            Mandatory,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'Which Azure resource group would you like to target?')]

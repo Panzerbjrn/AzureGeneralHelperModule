@@ -16,10 +16,8 @@ Function List-AzContainerContents{
 		Outputs to screen
 
 	.NOTES
-		Version:			0.1
 		Author:				Lars Panzerbjørn
 		Creation Date:		2023.10.06
-		Purpose/Change:     Initial script development
 #>
 	[CmdletBinding()]
 	param(

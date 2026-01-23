@@ -16,7 +16,6 @@ Function List-AzComputeResourceSku {
 		Outputs to screen
 
 	.NOTES
-		Version:			0.1
 		Author:				Lars Panzerbjørn
 #>
 	[CmdletBinding()]

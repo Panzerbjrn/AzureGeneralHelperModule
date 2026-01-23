@@ -17,7 +17,6 @@ Function List-AzRGRoleAssignments {
 	.NOTES
 		Author:				Lars Panzerbjørn
 		Creation Date:		2023.10.10
-		Purpose/Change:     Initial script development
 #>
 	[CmdletBinding()]
 	param(

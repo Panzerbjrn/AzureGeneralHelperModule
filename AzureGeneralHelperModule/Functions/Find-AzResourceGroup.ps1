@@ -1,22 +1,74 @@
 function Find-AzResourceGroup {
+    <#
+    .SYNOPSIS
+        Finds Azure Resource Groups across subscriptions using Azure Resource Graph.
+
+    .DESCRIPTION
+        This function searches for Azure Resource Groups across one or more subscriptions using Azure Resource Graph queries.
+        It supports exact or partial name matching, filtering by subscription and location, and optionally including resources within the resource groups.
+
+    .PARAMETER ResourceGroupName
+        The name of the Resource Group to search for. Supports exact or partial matching based on the ExactMatch parameter.
+
+    .PARAMETER ExactMatch
+        If specified, performs an exact name match. Otherwise, performs a partial match (contains).
+
+    .PARAMETER IncludeResources
+        If specified, includes all resources within the matching resource groups in the results.
+
+    .PARAMETER SubscriptionIds
+        Optional. Array of subscription IDs to search within. If not specified, searches all accessible subscriptions.
+
+    .PARAMETER Locations
+        Optional. Array of Azure locations to filter by. If not specified, searches all locations.
+
+    .PARAMETER ShowSubscriptionSummary
+        If specified, displays a summary of results grouped by subscription.
+
+    .EXAMPLE
+        Find-AzResourceGroup -ResourceGroupName "myapp" -ExactMatch
+
+        Finds resource groups with the exact name "myapp".
+
+    .EXAMPLE
+        Find-AzResourceGroup -ResourceGroupName "prod" -IncludeResources
+
+        Finds all resource groups containing "prod" in their name and includes all resources within them.
+
+    .EXAMPLE
+        Find-AzResourceGroup -ResourceGroupName "network" -SubscriptionIds @("sub-id-1", "sub-id-2") -ShowSubscriptionSummary
+
+        Finds resource groups containing "network" in the specified subscriptions and shows a summary.
+
+    .INPUTS
+        Input is from command line or called from a script.
+
+    .OUTPUTS
+        Outputs resource group information with subscription details to the pipeline.
+
+    .NOTES
+        Author:             Lars Panzerbjørn
+        Creation Date:      2026.01.29
+    #>
+
     [CmdletBinding()]
     param(
         [Parameter(Mandatory, Position = 0)]
         [string]$ResourceGroupName,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
         [switch]$ExactMatch,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
         [switch]$IncludeResources,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
         [string[]]$SubscriptionIds,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
         [string[]]$Locations,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
         [switch]$ShowSubscriptionSummary
     )
 

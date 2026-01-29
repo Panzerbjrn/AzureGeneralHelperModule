@@ -22,6 +22,17 @@ function Get-NsgAssociatedVnets {
     .EXAMPLE
         $nsg = Get-AzNetworkSecurityGroup -Name "MyNSG" -ResourceGroupName "MyResourceGroup"
         Get-NsgAssociatedVnets -Nsg $nsg
+
+    .INPUTS
+        Microsoft.Azure.Commands.Network.Models.PSNetworkSecurityGroup
+
+    .OUTPUTS
+        PSCustomObject
+        Returns information about VNETs associated with the NSG.
+
+    .NOTES
+        Author:             Lars Panzerbjørn
+        Creation Date:      2026.01.29
     #>
 
     [CmdletBinding(DefaultParameterSetName = 'ByName')]

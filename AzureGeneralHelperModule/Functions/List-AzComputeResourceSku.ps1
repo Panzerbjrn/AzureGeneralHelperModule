@@ -1,13 +1,28 @@
-Function List-AzComputeResourceSku {
+function List-AzComputeResourceSku {
 <#
 	.SYNOPSIS
-		Lists Azusre Compute Resource Skus
+		Lists Azure Compute Resource Skus
 
 	.DESCRIPTION
 		Lists Azure Compute Resource Skus. Will ask for region if none is specified.
 
+	.PARAMETER AzLocation
+		Optional. The Azure region/location to filter by.
+
+	.PARAMETER AzResourceType
+		Optional. The type of resource SKU to filter by. Valid values: availabilitySets, disks, hostGroups/hosts, snapshots, virtualMachines.
+
+	.PARAMETER Ask
+		Optional. If specified, prompts the user to select a region interactively.
+
 	.EXAMPLE
 		List-AzComputeResourceSku
+
+	.EXAMPLE
+		List-AzComputeResourceSku -AzLocation "westeurope"
+
+	.EXAMPLE
+		List-AzComputeResourceSku -Ask -AzResourceType "virtualMachines"
 
 	.INPUTS
 		Input is from command line or called from a script.
@@ -17,6 +32,7 @@ Function List-AzComputeResourceSku {
 
 	.NOTES
 		Author:				Lars Panzerbjørn
+		Creation Date:		2026.01.29
 #>
 	[CmdletBinding()]
 	param(
@@ -38,29 +54,29 @@ Function List-AzComputeResourceSku {
 
     Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-    IF((!$AzLocation) -and ($Ask)){
+    if ((!$AzLocation) -and ($Ask)) {
         $Menu = @{}
         $Items =  Get-AzLocation | Select-Object DisplayName | Sort-Object -Property DisplayName
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].DisplayName)"
             $Menu.Add($i,($Items[$i-1].DisplayName))
-            }
+        }
 
         [int]$ans = Read-Host 'Enter selection'
         $AzLocation = $Menu.Item($ans)
     }
 
-    IF($AzLocation){
+    if ($AzLocation) {
         $Skus = Get-AzComputeResourceSku -Location $AzLocation
     }
-    ELSE{
+    else {
         $Skus = Get-AzComputeResourceSku
     }
 
-    IF($AzResourceType){
+    if ($AzResourceType) {
         $Skus | Where-Object { $_.ResourceType -match $AzResourceType }
     }
-    ELSE{
+    else {
         $Skus
     }
 }

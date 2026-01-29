@@ -1,4 +1,4 @@
-Function List-AzRGRoleAssignments {
+function List-AzRGRoleAssignments {
 <#
 	.SYNOPSIS
 		Lists Azure Role Assignments on a Resource Group.
@@ -56,27 +56,27 @@ Function List-AzRGRoleAssignments {
 	$AZSubs = Get-AzSubscription
 	$OutPut = [System.Collections.Generic.List[psobject]]::new()
 
-    IF($All){
+    if ($All) {
         $AzRoleAssignments = Get-AzRoleAssignment
     }
-    IF($Ask){
+    if ($Ask) {
         $Menu = @{}
-        $Items =  Get-AzSubscription | select Name,Id | Sort -Property Name
+        $Items =  Get-AzSubscription | Select-Object Name,Id | Sort-Object -Property Name
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].Name)"
             $Menu.Add($i,($Items[$i-1]))
-            }
+        }
 
         [int]$ans = Read-Host 'Enter selection'
         $AzSub = $Menu.Item($ans)
         Set-AzContext -Subscription $Menu.Item($ans).Name
 
         $Menu = @{}
-        $Items =  Get-AzResourceGroup | select ResourceGroupName,ResourceId | Sort -Property ResourceGroupName
+        $Items =  Get-AzResourceGroup | Select-Object ResourceGroupName,ResourceId | Sort-Object -Property ResourceGroupName
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].ResourceGroupName)"
             $Menu.Add($i,($Items[$i-1]))
-            }
+        }
 
         [int]$ans = Read-Host 'Enter selection'
         $AZRG = $Menu.Item($ans).ResourceGroupName
@@ -84,35 +84,34 @@ Function List-AzRGRoleAssignments {
         $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)/resourceGroups/$AZRG" |
         Where-Object { -not $_.Inherited }
 
-
         #$AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)"
     }
-    IF($AzSubscription){
+    if ($AzSubscription) {
         $AzSub = Get-AzSubscription -SubscriptionName $AzSubscription
         #Set-AzContext -Subscription $AzSub.Name
 
-        IF($AzResourceGroup){
+        if ($AzResourceGroup) {
             $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)/resourceGroups/$AzResourceGroup" |
             Where-Object { -not $_.Inherited }
         }
-        ELSE{
+        else {
             $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)"
         }
     }
 
-	IF($ObjectType -eq "User"){
+	if ($ObjectType -eq "User") {
 		$AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.ObjectType -eq "User"}
 	}
-	IF($ObjectType -eq "ServicePrincipal"){
+	if ($ObjectType -eq "ServicePrincipal") {
 		$AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.ObjectType -eq "ServicePrincipal"}
 	}
 
-    IF($Name){
+    if ($Name) {
         $AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.DisplayName -like "*$Name*"}
     }
 
 	Write-Verbose "There are $($AzRoleAssignments.count) Az Role Assignments"
-	ForEach($AzRoleAssignment in $AzRoleAssignments){
+	foreach ($AzRoleAssignment in $AzRoleAssignments) {
 		#$AzRoleAssignment
 		#$AzRoleAssignment.DisplayName
 		$Output.Add($([pscustomobject]@{

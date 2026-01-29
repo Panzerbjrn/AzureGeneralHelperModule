@@ -1,4 +1,4 @@
-Function List-AzContainerContents{
+function List-AzContainerContents {
 <#
 	.SYNOPSIS
 		Lists contents of an Azure Container
@@ -50,31 +50,33 @@ Function List-AzContainerContents{
 		[string]$AzStoragecontainer
 	)
 
-	BEGIN{
+	begin {
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	PROCESS{
+	process {
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        IF($AzSubscription){
+        if ($AzSubscription) {
             Set-AzContext -Subscription $AzSubscription | Out-null
         }
 
-		IF(!$AzResourceGroup){
+		if (!$AzResourceGroup) {
 			$Menu = @{}
         	$Items = Get-AzResourceGroup | Sort-Object -Property ResourceGroupName
 			for ($i=1;$i -le $Items.count; $i++) {
 				Write-Host "$i. $($Items[$i-1].ResourceGroupName)"
 				$Menu.Add($i,($Items[$i-1].ResourceGroupName))
-				}
+			}
 
 			[int]$ans = Read-Host 'Enter selection'
 			$AzResourceGroup = $Menu.Item($ans)
 		}
 
-        IF($AzStorageAccount){$AzStorageAccount = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount}
-		IF(!$AzStorageAccount){
+        if ($AzStorageAccount) {
+			$AzStorageAccount = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount
+		}
+		if (!$AzStorageAccount) {
 			$Menu = @{}
         	$Items = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup | Sort-Object -Property StorageAccountName
 			for ($i=1;$i -le $Items.count; $i++) {
@@ -86,10 +88,10 @@ Function List-AzContainerContents{
 			$AzStorageAccount = $Menu.Item($ans)
 		}
 
-        IF($AzStoragecontainer){
+        if ($AzStoragecontainer) {
             $AzStoragecontainer = Get-AzStorageContainer -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context -Name $AzStoragecontainer | Select-Object -ExpandProperty Name
         }
-        IF(!$AzStoragecontainer){
+        if (!$AzStoragecontainer) {
 			$Menu = @{}
         	$Items = Get-AzStorageContainer -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context | Sort-Object -Property Name
 			for ($i=1;$i -le $Items.count; $i++) {
@@ -101,12 +103,10 @@ Function List-AzContainerContents{
 			$AzStoragecontainer = $Menu.Item($ans)
 		}
 
-
         Get-AzStorageBlob -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context -Container $AzStoragecontainer | Select-Object -ExpandProperty Name
-
     }
 
-	END{
+	end {
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

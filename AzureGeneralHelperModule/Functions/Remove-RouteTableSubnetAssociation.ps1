@@ -1,4 +1,4 @@
-Function Remove-RouteTableSubnetAssociation {
+function Remove-RouteTableSubnetAssociation {
 <#
 	.SYNOPSIS
 		Removes the Route Table association from a subnet in an Azure Virtual Network.
@@ -84,7 +84,7 @@ Function Remove-RouteTableSubnetAssociation {
 		[switch]$Force
 	)
 
-	BEGIN {
+	begin {
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
 		# Check if Az.Network module is available
@@ -98,12 +98,12 @@ Function Remove-RouteTableSubnetAssociation {
 		}
 	}
 
-	PROCESS {
+	process {
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
 		try {
 			# Set subscription context if specified
-			IF ($AzSubscription) {
+			if ($AzSubscription) {
 				Write-Verbose "Setting Azure context to subscription: $AzSubscription"
 				$Subscription = Get-AzSubscription -SubscriptionName $AzSubscription
 				Set-AzContext -SubscriptionId $Subscription.Id | Out-Null
@@ -179,7 +179,7 @@ Function Remove-RouteTableSubnetAssociation {
 		}
 	}
 
-	END {
+	end {
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

@@ -1,4 +1,4 @@
-Function List-AzStorageAccounts {
+function List-AzStorageAccounts {
 <#
 	.SYNOPSIS
 		Lists Azure Storage Accounts
@@ -36,34 +36,33 @@ Function List-AzStorageAccounts {
 		[string]$AzResourceGroup
 	)
 
-	BEGIN{
+	begin {
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	PROCESS{
+	process {
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        IF($AzSubscription){
+        if ($AzSubscription) {
             Set-AzContext -Subscription $AzSubscription | Out-null
         }
 
-		IF(!$AzResourceGroup){
+		if (!$AzResourceGroup) {
 			$Menu = @{}
         	$RGs = Get-AzResourceGroup | Sort-Object -Property ResourceGroupName
 			for ($i=1;$i -le $RGs.count; $i++) {
 				Write-Host "$i. $($RGs[$i-1].ResourceGroupName)"
 				$Menu.Add($i,($RGs[$i-1].ResourceGroupName))
-				}
+			}
 
 			[int]$ans = Read-Host 'Enter selection'
 			$AzResourceGroup = $Menu.Item($ans)
 		}
 
 		Get-AzStorageAccount -ResourceGroupName $AzResourceGroup | Select-Object -ExpandProperty StorageAccountName
-
     }
 
-	END{
+	end {
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

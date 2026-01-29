@@ -1,4 +1,4 @@
-Function List-AzKeyVaults {
+function List-AzKeyVaults {
 <#
 	.SYNOPSIS
 		Lists Azure Key Vaults
@@ -6,8 +6,23 @@ Function List-AzKeyVaults {
 	.DESCRIPTION
 		Lists Azure Key Vaults, either for all contexts or the active context. Or user can be asked which context to use.
 
+	.PARAMETER AzSubscription
+		Optional. The Azure subscription to target.
+
+	.PARAMETER Ask
+		Optional. If specified, prompts the user to select a subscription interactively.
+
+	.PARAMETER All
+		Optional. If specified, lists Key Vaults from all subscriptions.
+
 	.EXAMPLE
-		Lists Azusre Key Vaults
+		List-AzKeyVaults
+
+	.EXAMPLE
+		List-AzKeyVaults -All
+
+	.EXAMPLE
+		List-AzKeyVaults -Ask
 
 	.INPUTS
 		Input is from command line or called from a script.
@@ -34,23 +49,23 @@ Function List-AzKeyVaults {
 
     $KVaults = @()
 
-    IF($All){
-        Get-AzSubscription | select-Object -ExpandProperty Id | ForEach-Object {
+    if ($All) {
+        Get-AzSubscription | Select-Object -ExpandProperty Id | ForEach-Object {
             $KVaults += Get-AzKeyVault -SubscriptionId $_
         }
     }
-    ELSEIF($AzSubscription){
-        Get-AzSubscription -SubscriptionName $AzSubscription | select-Object -ExpandProperty Id | ForEach-Object {
+    elseif ($AzSubscription) {
+        Get-AzSubscription -SubscriptionName $AzSubscription | Select-Object -ExpandProperty Id | ForEach-Object {
             $KVaults += Get-AzKeyVault -SubscriptionId $_
         }
     }
-    ELSEIF($Ask){
+    elseif ($Ask) {
         $Menu = @{}
-        $Items =  Get-AzSubscription | select Name,Id | Sort -Property Name
+        $Items =  Get-AzSubscription | Select-Object Name,Id | Sort-Object -Property Name
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].Name)"
             $Menu.Add($i,($Items[$i-1]))
-            }
+        }
 
         [int]$ans = Read-Host 'Enter selection'
         $AzSub = $Menu.Item($ans)
@@ -59,7 +74,7 @@ Function List-AzKeyVaults {
         Write-OutPut $AzSub.Id
         $KVaults = Get-AzKeyVault -SubscriptionId $AzSub.Id
     }
-    ELSE{
+    else {
         $KVaults = Get-AzKeyVault
     }
 

@@ -1,4 +1,4 @@
-Function List-AzSubscriptions {
+function List-AzSubscriptions {
 <#
 	.SYNOPSIS
 		Lists Azure subscriptions
@@ -30,22 +30,22 @@ Function List-AzSubscriptions {
 		[string]$AzSubscription
 	)
 
-	BEGIN{
+	begin {
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	PROCESS{
+	process {
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        IF($AzSubscription){
+        if ($AzSubscription) {
             Get-AzSubscription -SubscriptionName $AzSubscription | Select-Object -ExpandProperty Name | Sort-Object
         }
-        ELSE{
+        else {
             Get-AzSubscription | Select-Object -ExpandProperty Name | Sort-Object
         }
     }
 
-	END{
+	end {
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

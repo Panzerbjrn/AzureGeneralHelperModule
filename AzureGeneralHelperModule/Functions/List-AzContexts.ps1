@@ -1,4 +1,4 @@
-Function List-AzContexts {
+function List-AzContexts {
 <#
 	.SYNOPSIS
 		Lists Azure Contexts
@@ -30,10 +30,10 @@ Function List-AzContexts {
 		[string]$AzContext
 	)
 
-	IF($AzContext){
+	if ($AzContext) {
 		Get-AzContext -Name $AzContext | Select-Object * -Force
 	}
-	ELSE{
+	else {
 		Get-AzContext -ListAvailable | Sort-Object -Property Name
 	}
 }

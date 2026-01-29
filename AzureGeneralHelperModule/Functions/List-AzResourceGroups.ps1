@@ -1,4 +1,4 @@
-Function List-AzResourceGroups{
+function List-AzResourceGroups {
 <#
 	.SYNOPSIS
 		Lists Azure Resourcegroups in the current Azure context
@@ -30,23 +30,23 @@ Function List-AzResourceGroups{
 		[string]$AzSubscription
 	)
 
-	BEGIN{
+	begin {
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	PROCESS{
+	process {
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        IF($AzSubscription){
+        if ($AzSubscription) {
             Set-AzContext -Subscription $AzSubscription | Out-null
         }
 
-		IF(!$AzResourceGroup){
+		if (!$AzResourceGroup) {
         	Get-AzResourceGroup | Select-Object -ExpandProperty ResourceGroupName | Sort-Object
 		}
     }
 
-	END{
+	end {
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

@@ -1,4 +1,4 @@
-Function List-AzRoleAssignments {
+function List-AzRoleAssignments {
 <#
 	.SYNOPSIS
 		Lists Azure Role Assignments
@@ -6,14 +6,32 @@ Function List-AzRoleAssignments {
 	.DESCRIPTION
 		Lists Azure Role Assignments, either for all contexts or the active context. Or user can be asked which context to use.
 
+	.PARAMETER AzSubscription
+		Optional. The Azure subscription to target.
+
+	.PARAMETER ObjectType
+		Optional. Filter by object type. Valid values: User, ServicePrincipal.
+
+	.PARAMETER Ask
+		Optional. If specified, prompts the user to select a subscription interactively.
+
+	.PARAMETER All
+		Optional. If specified, lists role assignments from all subscriptions.
+
 	.EXAMPLE
-		Lists Azusre Role Assignments
+		List-AzRoleAssignments
+
+	.EXAMPLE
+		List-AzRoleAssignments -All
+
+	.EXAMPLE
+		List-AzRoleAssignments -ObjectType User
 
 	.INPUTS
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		Outputs object with VaultName and ResourceGroupName
+		Outputs object with DisplayName, SignInName, Scope, Subscription, ObjectType, RoleDefinitionName, and Description.
 
 	.NOTES
 		Author:				Lars Panzerbjørn
@@ -43,36 +61,35 @@ Function List-AzRoleAssignments {
 	$AZSubs = Get-AzSubscription
 	$OutPut = [System.Collections.Generic.List[psobject]]::new()
 
-    IF($All){
+    if ($All) {
         $AzRoleAssignments = Get-AzRoleAssignment
     }
-    IF($Ask){
+    if ($Ask) {
         $Menu = @{}
-        $Items =  Get-AzSubscription | select Name,Id | Sort -Property Name
+        $Items =  Get-AzSubscription | Select-Object Name,Id | Sort-Object -Property Name
         for ($i=1;$i -le $Items.count; $i++) {
             Write-Host "$i. $($Items[$i-1].Name)"
             $Menu.Add($i,($Items[$i-1]))
-            }
+        }
 
         [int]$ans = Read-Host 'Enter selection'
         $AzSub = $Menu.Item($ans)
 
         $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)"
     }
-    IF($AzSubscription){
+    if ($AzSubscription) {
         $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$(Get-AzSubscription -SubscriptionName $AzSubscription)"
     }
 
-	IF($ObjectType -eq "User"){
+	if ($ObjectType -eq "User") {
 		$AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.ObjectType -eq "User"}
 	}
-	IF($ObjectType -eq "ServicePrincipal"){
+	if ($ObjectType -eq "ServicePrincipal") {
 		$AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.ObjectType -eq "ServicePrincipal"}
 	}
 
-
 	Write-Verbose "There are $($AzRoleAssignments.count) Az Role Assignments"
-	ForEach($AzRoleAssignment in $AzRoleAssignments){
+	foreach ($AzRoleAssignment in $AzRoleAssignments) {
 		#$AzRoleAssignment
 		#$AzRoleAssignment.DisplayName
 		$Output.Add($([pscustomobject]@{

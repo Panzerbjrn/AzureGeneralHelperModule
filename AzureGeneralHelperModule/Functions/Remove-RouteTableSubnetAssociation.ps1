@@ -84,26 +84,26 @@ function Remove-RouteTableSubnetAssociation {
 		[switch]$Force
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
 		# Check if Az.Network module is available
-		if (-not (Get-Module -ListAvailable -Name Az.Network)) {
+		IF(-not (Get-Module -ListAvailable -Name Az.Network)) {
 			throw "Az.Network module is not installed. Please install it using: Install-Module -Name Az.Network"
 		}
 
 		# Import the module if not already loaded
-		if (-not (Get-Module -Name Az.Network)) {
+		IF(-not (Get-Module -Name Az.Network)) {
 			Import-Module Az.Network
 		}
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-		try {
+		TRY{
 			# Set subscription context if specified
-			if ($AzSubscription) {
+			IF($AzSubscription) {
 				Write-Verbose "Setting Azure context to subscription: $AzSubscription"
 				$Subscription = Get-AzSubscription -SubscriptionName $AzSubscription
 				Set-AzContext -SubscriptionId $Subscription.Id | Out-Null
@@ -117,12 +117,12 @@ function Remove-RouteTableSubnetAssociation {
 			Write-Verbose "Getting subnet: $SubnetName"
 			$Subnet = $VNet.Subnets | Where-Object { $_.Name -eq $SubnetName }
 
-			if (-not $Subnet) {
+			IF(-not $Subnet) {
 				throw "Subnet '$SubnetName' not found in virtual network '$VirtualNetworkName'"
 			}
 
 			# Check if the subnet has a Route Table associated
-			if (-not $Subnet.RouteTable) {
+			IF(-not $Subnet.RouteTable) {
 				Write-Host "`nSubnet '$SubnetName' does not have a Route Table associated." -ForegroundColor Yellow
 				return $null
 			}
@@ -142,7 +142,7 @@ function Remove-RouteTableSubnetAssociation {
 			# Confirm the action
 			$ConfirmMessage = "Remove Route Table '$CurrentRouteTableName' from subnet '$SubnetName' in VNet '$VirtualNetworkName'?"
 
-			if ($Force -or $PSCmdlet.ShouldProcess($SubnetName, "Remove Route Table association")) {
+			IF($Force -or $PSCmdlet.ShouldProcess($SubnetName, "Remove Route Table association")) {
 				Write-Verbose "Removing Route Table association from subnet: $SubnetName"
 
 				# Remove the Route Table association
@@ -163,7 +163,7 @@ function Remove-RouteTableSubnetAssociation {
 					SubnetName              = $SubnetName
 					ResourceGroupName       = $ResourceGroupName
 					PreviousRouteTable      = $CurrentRouteTableName
-					CurrentRouteTable       = if ($UpdatedSubnet.RouteTable) { $UpdatedSubnet.RouteTable.Id } else { $null }
+					CurrentRouteTable       = IF($UpdatedSubnet.RouteTable) { $UpdatedSubnet.RouteTable.Id } else { $null }
 					Status                  = 'Route Table Removed'
 				}
 
@@ -173,13 +173,13 @@ function Remove-RouteTableSubnetAssociation {
 				Write-Host "Operation cancelled by user." -ForegroundColor Yellow
 			}
 		}
-		catch {
+		CATCH{
 			Write-Error "Error removing Route Table association: $($_.Exception.Message)"
 			throw
 		}
 	}
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

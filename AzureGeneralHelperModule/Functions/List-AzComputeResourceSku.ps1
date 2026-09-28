@@ -54,7 +54,7 @@ function List-AzComputeResourceSku {
 
     Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-    if ((!$AzLocation) -and ($Ask)) {
+    IF((!$AzLocation) -and ($Ask)) {
         $Menu = @{}
         $Items =  Get-AzLocation | Select-Object DisplayName | Sort-Object -Property DisplayName
         for ($i=1;$i -le $Items.count; $i++) {
@@ -66,14 +66,14 @@ function List-AzComputeResourceSku {
         $AzLocation = $Menu.Item($ans)
     }
 
-    if ($AzLocation) {
+    IF($AzLocation) {
         $Skus = Get-AzComputeResourceSku -Location $AzLocation
     }
     else {
         $Skus = Get-AzComputeResourceSku
     }
 
-    if ($AzResourceType) {
+    IF($AzResourceType) {
         $Skus | Where-Object { $_.ResourceType -match $AzResourceType }
     }
     else {

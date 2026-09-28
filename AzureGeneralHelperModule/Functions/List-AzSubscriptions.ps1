@@ -30,14 +30,14 @@ function List-AzSubscriptions {
 		[string]$AzSubscription
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        if ($AzSubscription) {
+        IF($AzSubscription) {
             Get-AzSubscription -SubscriptionName $AzSubscription | Select-Object -ExpandProperty Name | Sort-Object
         }
         else {
@@ -45,7 +45,7 @@ function List-AzSubscriptions {
         }
     }
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

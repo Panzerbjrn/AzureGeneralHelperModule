@@ -59,26 +59,26 @@ function List-AzVMUserAssignedIdentities {
         [string]$AzSubscription
     )
 
-    begin {
+    BEGIN{
         Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
         # Check if Az.Compute module is available
-        if (-not (Get-Module -ListAvailable -Name Az.Compute)) {
+        IF(-not (Get-Module -ListAvailable -Name Az.Compute)) {
             throw "Az.Compute module is not installed. Please install it using: Install-Module -Name Az.Compute"
         }
 
         # Import the module if not already loaded
-        if (-not (Get-Module -Name Az.Compute)) {
+        IF(-not (Get-Module -Name Az.Compute)) {
             Import-Module Az.Compute
         }
     }
 
-    process {
+    PROCESS{
         Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        try {
+        TRY{
             # Set subscription context if specified
-            if ($AzSubscription) {
+            IF($AzSubscription) {
                 Write-Verbose "Setting Azure context to subscription: $AzSubscription"
                 Set-AzContext -Subscription $AzSubscription | Out-Null
             }
@@ -94,12 +94,12 @@ function List-AzVMUserAssignedIdentities {
             $identityInfo = @()
 
             # Check identity type
-            if ($VM.Identity) {
+            IF($VM.Identity) {
                 $identityType = $VM.Identity.Type
                 Write-Host "Identity Type: $identityType" -ForegroundColor Yellow
 
                 # Check for user-assigned identities
-                if ($VM.Identity.UserAssignedIdentities -and $VM.Identity.UserAssignedIdentities.Count -gt 0) {
+                IF($VM.Identity.UserAssignedIdentities -and $VM.Identity.UserAssignedIdentities.Count -gt 0) {
                     Write-Host "`nUser-Assigned Identities ($($VM.Identity.UserAssignedIdentities.Count)):" -ForegroundColor Green
 
                     foreach ($identity in $VM.Identity.UserAssignedIdentities.GetEnumerator()) {
@@ -138,7 +138,7 @@ function List-AzVMUserAssignedIdentities {
                 }
                 else {
                     Write-Host "`nNo user-assigned identities found on this VM." -ForegroundColor Yellow
-                    if ($identityType -eq "SystemAssigned") {
+                    IF($identityType -eq "SystemAssigned") {
                         Write-Host "This VM has a System-Assigned identity only." -ForegroundColor Yellow
                     }
                     return $null
@@ -149,13 +149,13 @@ function List-AzVMUserAssignedIdentities {
                 return $null
             }
         }
-        catch {
+        CATCH{
             Write-Error "Error retrieving VM identities: $($_.Exception.Message)"
             throw
         }
     }
 
-    end {
+    END{
         Write-Verbose "Ending $($MyInvocation.Mycommand)"
     }
 }

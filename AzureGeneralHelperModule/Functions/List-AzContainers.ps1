@@ -43,18 +43,18 @@ function List-AzContainers {
 		[string]$AzStorageAccount
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        if ($AzSubscription) {
+        IF($AzSubscription) {
             Set-AzContext -Subscription $AzSubscription | Out-null
         }
 
-		if (!$AzResourceGroup) {
+		IF(!$AzResourceGroup) {
 			$Menu = @{}
         	$RGs = Get-AzResourceGroup | Sort-Object -Property ResourceGroupName
 			for ($i=1;$i -le $RGs.count; $i++) {
@@ -66,10 +66,10 @@ function List-AzContainers {
 			$AzResourceGroup = $Menu.Item($ans)
 		}
 
-        if ($AzStorageAccount) {
+        IF($AzStorageAccount) {
 			$AzStorageAccount = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount
 		}
-		if (!$AzStorageAccount) {
+		IF(!$AzStorageAccount) {
 			$Menu = @{}
         	$RGs = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup | Sort-Object -Property StorageAccountName
 			for ($i=1;$i -le $RGs.count; $i++) {
@@ -84,7 +84,7 @@ function List-AzContainers {
         Get-AzStorageContainer -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context | Select-Object -ExpandProperty Name | Sort-Object
     }
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

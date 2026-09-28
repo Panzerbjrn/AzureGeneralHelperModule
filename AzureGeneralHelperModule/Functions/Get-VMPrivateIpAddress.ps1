@@ -43,14 +43,14 @@ function Get-VMPrivateIpAddress {
         [string]$VMName
     )
 
-    begin {
+    BEGIN{
         Write-Verbose "Beginning $($MyInvocation.Mycommand)"
     }
 
-    process {
+    PROCESS{
         Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        try {
+        TRY{
             Write-Verbose "Retrieving Virtual Machine: $VMName"
             $VM = Get-AzVM -Name $VMName -ErrorAction Stop
 
@@ -62,13 +62,13 @@ function Get-VMPrivateIpAddress {
 
             return $IPConfig.PrivateIpAddress
         }
-        catch {
+        CATCH{
             Write-Error "Error retrieving private IP address for VM '$VMName': $($_.Exception.Message)"
             throw
         }
     }
 
-    end {
+    END{
         Write-Verbose "Ending $($MyInvocation.Mycommand)"
     }
 }

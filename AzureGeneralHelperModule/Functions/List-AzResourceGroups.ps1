@@ -30,23 +30,23 @@ function List-AzResourceGroups {
 		[string]$AzSubscription
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        if ($AzSubscription) {
+        IF($AzSubscription) {
             Set-AzContext -Subscription $AzSubscription | Out-null
         }
 
-		if (!$AzResourceGroup) {
+		IF(!$AzResourceGroup) {
         	Get-AzResourceGroup | Select-Object -ExpandProperty ResourceGroupName | Sort-Object
 		}
     }
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

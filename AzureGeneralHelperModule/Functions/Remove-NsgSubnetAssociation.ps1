@@ -84,26 +84,26 @@ function Remove-NsgSubnetAssociation {
 		[switch]$Force
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
 		# Check if Az.Network module is available
-		if (-not (Get-Module -ListAvailable -Name Az.Network)) {
+		IF(-not (Get-Module -ListAvailable -Name Az.Network)) {
 			throw "Az.Network module is not installed. Please install it using: Install-Module -Name Az.Network"
 		}
 
 		# Import the module if not already loaded
-		if (-not (Get-Module -Name Az.Network)) {
+		IF(-not (Get-Module -Name Az.Network)) {
 			Import-Module Az.Network
 		}
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-		try {
+		TRY{
 			# Set subscription context if specified
-			if ($AzSubscription) {
+			IF($AzSubscription) {
 				Write-Verbose "Setting Azure context to subscription: $AzSubscription"
 				$Subscription = Get-AzSubscription -SubscriptionName $AzSubscription
 				Set-AzContext -SubscriptionId $Subscription.Id | Out-Null
@@ -117,12 +117,12 @@ function Remove-NsgSubnetAssociation {
 			Write-Verbose "Getting subnet: $SubnetName"
 			$Subnet = $VNet.Subnets | Where-Object { $_.Name -eq $SubnetName }
 
-			if (-not $Subnet) {
+			IF(-not $Subnet) {
 				throw "Subnet '$SubnetName' not found in virtual network '$VirtualNetworkName'"
 			}
 
 			# Check if the subnet has an NSG associated
-			if (-not $Subnet.NetworkSecurityGroup) {
+			IF(-not $Subnet.NetworkSecurityGroup) {
 				Write-Host "`nSubnet '$SubnetName' does not have an NSG associated." -ForegroundColor Yellow
 				return $null
 			}
@@ -142,7 +142,7 @@ function Remove-NsgSubnetAssociation {
 			# Confirm the action
 			$ConfirmMessage = "Remove NSG '$CurrentNsgName' from subnet '$SubnetName' in VNet '$VirtualNetworkName'?"
 
-			if ($Force -or $PSCmdlet.ShouldProcess($SubnetName, "Remove NSG association")) {
+			IF($Force -or $PSCmdlet.ShouldProcess($SubnetName, "Remove NSG association")) {
 				Write-Verbose "Removing NSG association from subnet: $SubnetName"
 
 				# Remove the NSG association
@@ -163,7 +163,7 @@ function Remove-NsgSubnetAssociation {
 					SubnetName            = $SubnetName
 					ResourceGroupName     = $ResourceGroupName
 					PreviousNsg           = $CurrentNsgName
-					CurrentNsg            = if ($UpdatedSubnet.NetworkSecurityGroup) { $UpdatedSubnet.NetworkSecurityGroup.Id } else { $null }
+					CurrentNsg            = IF($UpdatedSubnet.NetworkSecurityGroup) { $UpdatedSubnet.NetworkSecurityGroup.Id } else { $null }
 					Status                = 'NSG Removed'
 				}
 
@@ -173,13 +173,13 @@ function Remove-NsgSubnetAssociation {
 				Write-Host "Operation cancelled by user." -ForegroundColor Yellow
 			}
 		}
-		catch {
+		CATCH{
 			Write-Error "Error removing NSG association: $($_.Exception.Message)"
 			throw
 		}
 	}
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

@@ -47,22 +47,22 @@ function Get-NsgAssociatedVnets {
         [Microsoft.Azure.Commands.Network.Models.PSNetworkSecurityGroup]$Nsg
     )
 
-    begin {
+    BEGIN{
         # Check if Az.Network module is available
-        if (-not (Get-Module -ListAvailable -Name Az.Network)) {
+        IF(-not (Get-Module -ListAvailable -Name Az.Network)) {
             throw "Az.Network module is not installed. Please install it using: Install-Module -Name Az.Network"
         }
 
         # Import the module if not already loaded
-        if (-not (Get-Module -Name Az.Network)) {
+        IF(-not (Get-Module -Name Az.Network)) {
             Import-Module Az.Network
         }
     }
 
-    process {
-        try {
+    PROCESS{
+        TRY{
             # Get the NSG object if not provided
-            if ($PSCmdlet.ParameterSetName -eq 'ByName') {
+            IF($PSCmdlet.ParameterSetName -eq 'ByName') {
                 Write-Verbose "Retrieving NSG: $NsgName from Resource Group: $ResourceGroupName"
                 $Nsg = Get-AzNetworkSecurityGroup -Name $NsgName -ResourceGroupName $ResourceGroupName -ErrorAction Stop
             }
@@ -74,7 +74,7 @@ function Get-NsgAssociatedVnets {
             $vnetInfo = @()
 
             # Check subnets associated with the NSG
-            if ($Nsg.Subnets -and $Nsg.Subnets.Count -gt 0) {
+            IF($Nsg.Subnets -and $Nsg.Subnets.Count -gt 0) {
                 Write-Host "Associated Subnets ($($Nsg.Subnets.Count)):" -ForegroundColor Green
 
                 foreach ($subnetRef in $Nsg.Subnets) {
@@ -108,7 +108,7 @@ function Get-NsgAssociatedVnets {
             }
 
             # Check network interfaces associated with the NSG
-            if ($Nsg.NetworkInterfaces -and $Nsg.NetworkInterfaces.Count -gt 0) {
+            IF($Nsg.NetworkInterfaces -and $Nsg.NetworkInterfaces.Count -gt 0) {
                 Write-Host "Associated Network Interfaces ($($Nsg.NetworkInterfaces.Count)):" -ForegroundColor Green
 
                 foreach ($nicRef in $Nsg.NetworkInterfaces) {
@@ -122,11 +122,11 @@ function Get-NsgAssociatedVnets {
                     Write-Host "  - NIC: $nicName (Resource Group: $nicRg)`n" -ForegroundColor Yellow
 
                     # Optionally, get the NIC details to find its VNET
-                    try {
+                    TRY{
                         $nic = Get-AzNetworkInterface -ResourceGroupName $nicRg -Name $nicName -ErrorAction Stop
 
                         foreach ($ipConfig in $nic.IpConfigurations) {
-                            if ($ipConfig.Subnet) {
+                            IF($ipConfig.Subnet) {
                                 $subnetId = $ipConfig.Subnet.Id
                                 $subnetIdParts = $subnetId -split '/'
                                 $vnetName = $subnetIdParts[8]
@@ -146,7 +146,7 @@ function Get-NsgAssociatedVnets {
                                 }
                             }
                         }
-                    } catch {
+                    } CATCH{
                         Write-Warning "Could not retrieve details for NIC: $nicName - $($_.Exception.Message)"
                     }
                 }
@@ -155,7 +155,7 @@ function Get-NsgAssociatedVnets {
             }
 
             # Return the collection of VNET associations
-            if ($vnetInfo.Count -gt 0) {
+            IF($vnetInfo.Count -gt 0) {
                 Write-Host "`nSummary - Unique VNETs:" -ForegroundColor Cyan
                 $uniqueVnets = $vnetInfo | Select-Object -Property VNetName, ResourceGroup -Unique
                 $uniqueVnets | Format-Table -AutoSize
@@ -166,7 +166,7 @@ function Get-NsgAssociatedVnets {
                 return $null
             }
 
-        } catch {
+        } CATCH{
             Write-Error "Error retrieving NSG associations: $($_.Exception.Message)"
             throw
         }

@@ -56,10 +56,10 @@ function List-AzRGRoleAssignments {
 	$AZSubs = Get-AzSubscription
 	$OutPut = [System.Collections.Generic.List[psobject]]::new()
 
-    if ($All) {
+    IF($All) {
         $AzRoleAssignments = Get-AzRoleAssignment
     }
-    if ($Ask) {
+    IF($Ask) {
         $Menu = @{}
         $Items =  Get-AzSubscription | Select-Object Name,Id | Sort-Object -Property Name
         for ($i=1;$i -le $Items.count; $i++) {
@@ -86,11 +86,11 @@ function List-AzRGRoleAssignments {
 
         #$AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)"
     }
-    if ($AzSubscription) {
+    IF($AzSubscription) {
         $AzSub = Get-AzSubscription -SubscriptionName $AzSubscription
         #Set-AzContext -Subscription $AzSub.Name
 
-        if ($AzResourceGroup) {
+        IF($AzResourceGroup) {
             $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)/resourceGroups/$AzResourceGroup" |
             Where-Object { -not $_.Inherited }
         }
@@ -99,14 +99,14 @@ function List-AzRGRoleAssignments {
         }
     }
 
-	if ($ObjectType -eq "User") {
+	IF($ObjectType -eq "User") {
 		$AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.ObjectType -eq "User"}
 	}
-	if ($ObjectType -eq "ServicePrincipal") {
+	IF($ObjectType -eq "ServicePrincipal") {
 		$AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.ObjectType -eq "ServicePrincipal"}
 	}
 
-    if ($Name) {
+    IF($Name) {
         $AzRoleAssignments = $AzRoleAssignments | Where-Object {$_.DisplayName -like "*$Name*"}
     }
 

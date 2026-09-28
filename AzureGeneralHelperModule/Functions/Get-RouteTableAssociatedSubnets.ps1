@@ -59,33 +59,33 @@ function Get-RouteTableAssociatedSubnets {
         [string]$AzSubscription
     )
 
-    begin {
+    BEGIN{
         Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
         # Check if Az.Network module is available
-        if (-not (Get-Module -ListAvailable -Name Az.Network)) {
+        IF(-not (Get-Module -ListAvailable -Name Az.Network)) {
             throw "Az.Network module is not installed. Please install it using: Install-Module -Name Az.Network"
         }
 
         # Import the module if not already loaded
-        if (-not (Get-Module -Name Az.Network)) {
+        IF(-not (Get-Module -Name Az.Network)) {
             Import-Module Az.Network
         }
     }
 
-    process {
+    PROCESS{
         Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        try {
+        TRY{
             # Set subscription context if specified
-            if ($AzSubscription) {
+            IF($AzSubscription) {
                 Write-Verbose "Setting Azure context to subscription: $AzSubscription"
                 $Subscription = Get-AzSubscription -SubscriptionName $AzSubscription
                 Set-AzContext -SubscriptionId $Subscription.Id | Out-Null
             }
 
             # Get the Route Table object if not provided
-            if ($PSCmdlet.ParameterSetName -eq 'ByName') {
+            IF($PSCmdlet.ParameterSetName -eq 'ByName') {
                 Write-Verbose "Retrieving Route Table: $RouteTableName from Resource Group: $ResourceGroupName"
                 $RouteTable = Get-AzRouteTable -Name $RouteTableName -ResourceGroupName $ResourceGroupName -ErrorAction Stop
             }
@@ -98,7 +98,7 @@ function Get-RouteTableAssociatedSubnets {
             $subnetInfo = @()
 
             # Check subnets associated with the Route Table
-            if ($RouteTable.Subnets -and $RouteTable.Subnets.Count -gt 0) {
+            IF($RouteTable.Subnets -and $RouteTable.Subnets.Count -gt 0) {
                 Write-Host "Associated Subnets ($($RouteTable.Subnets.Count)):" -ForegroundColor Green
 
                 foreach ($subnetRef in $RouteTable.Subnets) {
@@ -133,11 +133,11 @@ function Get-RouteTableAssociatedSubnets {
             }
 
             # Display route summary
-            if ($RouteTable.Routes -and $RouteTable.Routes.Count -gt 0) {
+            IF($RouteTable.Routes -and $RouteTable.Routes.Count -gt 0) {
                 Write-Host "Routes in this Route Table ($($RouteTable.Routes.Count)):" -ForegroundColor Green
                 foreach ($route in $RouteTable.Routes) {
                     Write-Host "  - $($route.Name): $($route.AddressPrefix) -> $($route.NextHopType)" -ForegroundColor Magenta
-                    if ($route.NextHopIpAddress) {
+                    IF($route.NextHopIpAddress) {
                         Write-Host "    Next Hop IP: $($route.NextHopIpAddress)" -ForegroundColor Magenta
                     }
                 }
@@ -145,7 +145,7 @@ function Get-RouteTableAssociatedSubnets {
             }
 
             # Return the collection of subnet associations
-            if ($subnetInfo.Count -gt 0) {
+            IF($subnetInfo.Count -gt 0) {
                 Write-Host "Summary - Associated Subnets:" -ForegroundColor Cyan
                 $subnetInfo | Format-Table -Property VNetName, SubnetName, ResourceGroup -AutoSize
 
@@ -157,13 +157,13 @@ function Get-RouteTableAssociatedSubnets {
             }
 
         }
-        catch {
+        CATCH{
             Write-Error "Error retrieving Route Table associations: $($_.Exception.Message)"
             throw
         }
     }
 
-    end {
+    END{
         Write-Verbose "Ending $($MyInvocation.Mycommand)"
     }
 }

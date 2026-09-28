@@ -36,18 +36,18 @@ function List-AzStorageAccounts {
 		[string]$AzResourceGroup
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        if ($AzSubscription) {
+        IF($AzSubscription) {
             Set-AzContext -Subscription $AzSubscription | Out-null
         }
 
-		if (!$AzResourceGroup) {
+		IF(!$AzResourceGroup) {
 			$Menu = @{}
         	$RGs = Get-AzResourceGroup | Sort-Object -Property ResourceGroupName
 			for ($i=1;$i -le $RGs.count; $i++) {
@@ -62,7 +62,7 @@ function List-AzStorageAccounts {
 		Get-AzStorageAccount -ResourceGroupName $AzResourceGroup | Select-Object -ExpandProperty StorageAccountName
     }
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

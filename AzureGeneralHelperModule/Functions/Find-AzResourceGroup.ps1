@@ -72,13 +72,13 @@ function Find-AzResourceGroup {
         [switch]$ShowSubscriptionSummary
     )
 
-    begin {
+    BEGIN{
         Write-Verbose "Starting search for resource group: $ResourceGroupName"
     }
 
-    process {
+    PROCESS{
         # Build where clause based on match type
-        if ($ExactMatch) {
+        IF($ExactMatch) {
             $WhereClause = "name == '$ResourceGroupName'"
             Write-Verbose "Using exact match search"
         } else {
@@ -87,7 +87,7 @@ function Find-AzResourceGroup {
         }
 
         # Build the base query
-        if ($IncludeResources) {
+        IF($IncludeResources) {
             $Query = @"
 Resources
 | where resourceGroup $($WhereClause -replace 'name','resourceGroup')
@@ -104,24 +104,24 @@ ResourceContainers
         }
 
         # Add subscription filtering if specified
-        if ($SubscriptionIds -and $SubscriptionIds.Count -gt 0) {
+        IF($SubscriptionIds -and $SubscriptionIds.Count -gt 0) {
             $SubsList = $SubscriptionIds -join "', '"
             $Query = $Query + "`n| where subscriptionId in ('$SubsList')"
             Write-Verbose "Filtering to specific subscriptions: $($SubscriptionIds -join ', ')"
         }
 
         # Add location filtering if specified
-        if ($Locations -and $Locations.Count -gt 0) {
+        IF($Locations -and $Locations.Count -gt 0) {
             $LocationsList = $Locations -join "', '"
             $Query = $Query + "`n| where location in ('$LocationsList')"
             Write-Verbose "Filtering to specific locations: $($Locations -join ', ')"
         }
 
-        try {
+        TRY{
             Write-Verbose "Executing Azure Resource Graph query"
             $Results = Search-AzGraph -Query $Query
 
-            if ($Results.Count -eq 0) {
+            IF($Results.Count -eq 0) {
                 Write-Warning "No resource groups found matching the pattern '$ResourceGroupName'"
                 return
             }
@@ -132,13 +132,13 @@ ResourceContainers
 
             foreach ($Result in $Results) {
                 # Cache subscription names to avoid repeated lookups
-                if (-not $SubscriptionCache.ContainsKey($Result.subscriptionId)) {
+                IF(-not $SubscriptionCache.ContainsKey($Result.subscriptionId)) {
                     $SubName = (Get-AzSubscription -SubscriptionId $Result.subscriptionId -ErrorAction SilentlyContinue).Name
-                    if (-not $SubName) { $SubName = "Unknown" }
+                    IF(-not $SubName) { $SubName = "Unknown" }
                     $SubscriptionCache[$Result.subscriptionId] = $SubName
                 }
 
-                if ($IncludeResources) {
+                IF($IncludeResources) {
                     $FormattedResults += [PSCustomObject]@{
                         SubscriptionName = $SubscriptionCache[$Result.subscriptionId]
                         SubscriptionId = $Result.subscriptionId
@@ -158,7 +158,7 @@ ResourceContainers
             }
 
             # Show summary if requested
-            if ($ShowSubscriptionSummary) {
+            IF($ShowSubscriptionSummary) {
                 Write-Host "`nSubscription Summary:" -ForegroundColor Green
                 $FormattedResults | Group-Object SubscriptionName | ForEach-Object {
                     Write-Host "  $($_.Name): $($_.Count) resource group(s)" -ForegroundColor Cyan
@@ -167,12 +167,12 @@ ResourceContainers
 
             return $FormattedResults
         }
-        catch {
+        CATCH{
             Write-Error "Failed to search for resource group: $($_.Exception.Message)"
         }
     }
 
-    end {
+    END{
         Write-Verbose "Search completed"
     }
 }

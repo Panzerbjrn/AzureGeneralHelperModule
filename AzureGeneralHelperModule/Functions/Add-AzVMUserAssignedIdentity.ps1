@@ -90,34 +90,34 @@ function Add-AzVMUserAssignedIdentity {
         [string]$AzSubscription
     )
 
-    begin {
+    BEGIN{
         Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
         # Check if Az.Compute module is available
-        if (-not (Get-Module -ListAvailable -Name Az.Compute)) {
+        IF(-not (Get-Module -ListAvailable -Name Az.Compute)) {
             throw "Az.Compute module is not installed. Please install it using: Install-Module -Name Az.Compute"
         }
 
         # Check if Az.ManagedServiceIdentity module is available
-        if (-not (Get-Module -ListAvailable -Name Az.ManagedServiceIdentity)) {
+        IF(-not (Get-Module -ListAvailable -Name Az.ManagedServiceIdentity)) {
             throw "Az.ManagedServiceIdentity module is not installed. Please install it using: Install-Module -Name Az.ManagedServiceIdentity"
         }
 
         # Import the modules if not already loaded
-        if (-not (Get-Module -Name Az.Compute)) {
+        IF(-not (Get-Module -Name Az.Compute)) {
             Import-Module Az.Compute
         }
-        if (-not (Get-Module -Name Az.ManagedServiceIdentity)) {
+        IF(-not (Get-Module -Name Az.ManagedServiceIdentity)) {
             Import-Module Az.ManagedServiceIdentity
         }
     }
 
-    process {
+    PROCESS{
         Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        try {
+        TRY{
             # Set subscription context if specified
-            if ($AzSubscription) {
+            IF($AzSubscription) {
                 Write-Verbose "Setting Azure context to subscription: $AzSubscription"
                 Set-AzContext -Subscription $AzSubscription | Out-Null
             }
@@ -131,9 +131,9 @@ function Add-AzVMUserAssignedIdentity {
             Write-Host "Location: $($VM.Location)" -ForegroundColor Cyan
 
             # Determine the identity resource ID
-            if ($PSCmdlet.ParameterSetName -eq 'ByName') {
+            IF($PSCmdlet.ParameterSetName -eq 'ByName') {
                 # If IdentityResourceGroup is not specified, use VM's resource group
-                if (-not $IdentityResourceGroup) {
+                IF(-not $IdentityResourceGroup) {
                     $IdentityResourceGroup = $ResourceGroupName
                     Write-Verbose "Using VM's resource group for identity: $IdentityResourceGroup"
                 }
@@ -152,20 +152,20 @@ function Add-AzVMUserAssignedIdentity {
             Write-Host "Identity Resource ID: $IdentityResourceId" -ForegroundColor Gray
 
             # Check if identity is already assigned
-            if ($VM.Identity -and $VM.Identity.UserAssignedIdentities) {
-                if ($VM.Identity.UserAssignedIdentities.ContainsKey($IdentityResourceId)) {
+            IF($VM.Identity -and $VM.Identity.UserAssignedIdentities) {
+                IF($VM.Identity.UserAssignedIdentities.ContainsKey($IdentityResourceId)) {
                     Write-Host "`nThis identity is already assigned to the VM." -ForegroundColor Yellow
                     return $VM
                 }
             }
 
             # Update the VM with the new identity
-            if (-not $VM.Identity) {
+            IF(-not $VM.Identity) {
                 # No identity exists, create UserAssigned identity type
                 Write-Verbose "VM has no identity, creating UserAssigned identity type"
                 $VM = Update-AzVM -ResourceGroupName $ResourceGroupName -VM $VM -IdentityType UserAssigned -IdentityId $IdentityResourceId -ErrorAction Stop
             }
-            elseif ($VM.Identity.Type -eq "SystemAssigned") {
+            ELSEIF($VM.Identity.Type -eq "SystemAssigned") {
                 # VM has system-assigned identity, change to SystemAssigned,UserAssigned
                 Write-Verbose "VM has SystemAssigned identity, changing to SystemAssigned,UserAssigned"
                 $VM = Update-AzVM -ResourceGroupName $ResourceGroupName -VM $VM -IdentityType "SystemAssigned,UserAssigned" -IdentityId $IdentityResourceId -ErrorAction Stop
@@ -181,7 +181,7 @@ function Add-AzVMUserAssignedIdentity {
             # Get updated VM to display current identities
             $UpdatedVM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $VMName
 
-            if ($UpdatedVM.Identity -and $UpdatedVM.Identity.UserAssignedIdentities) {
+            IF($UpdatedVM.Identity -and $UpdatedVM.Identity.UserAssignedIdentities) {
                 Write-Host "`nCurrent User-Assigned Identities ($($UpdatedVM.Identity.UserAssignedIdentities.Count)):" -ForegroundColor Cyan
                 foreach ($identity in $UpdatedVM.Identity.UserAssignedIdentities.GetEnumerator()) {
                     $identityId = $identity.Key
@@ -195,13 +195,13 @@ function Add-AzVMUserAssignedIdentity {
 
             return $UpdatedVM
         }
-        catch {
+        CATCH{
             Write-Error "Error adding user-assigned identity to VM: $($_.Exception.Message)"
             throw
         }
     }
 
-    end {
+    END{
         Write-Verbose "Ending $($MyInvocation.Mycommand)"
     }
 }

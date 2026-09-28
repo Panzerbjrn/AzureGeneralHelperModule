@@ -51,14 +51,14 @@ function Get-DisconnectedPeerings {
 		[string]$AzSubscription
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-		if ($AzSubscription) {
+		IF($AzSubscription) {
 			Write-Verbose "Setting Azure context to subscription: $AzSubscription"
 			$Subscription = Get-AzSubscription -SubscriptionName $AzSubscription
 			Set-AzContext -SubscriptionId $Subscription.Id | Out-Null
@@ -70,7 +70,7 @@ function Get-DisconnectedPeerings {
 		Write-Verbose "Filtering for disconnected peerings"
 		$DisconnectedPeerings = $VNet.VirtualNetworkPeerings | Where-Object { $_.PeeringState -eq "Disconnected" } | Select-Object Name, PeeringState, RemoteVirtualNetwork
 
-		if ($DisconnectedPeerings) {
+		IF($DisconnectedPeerings) {
 			Write-Verbose "Found $($DisconnectedPeerings.Count) disconnected peering(s)"
 			$DisconnectedPeerings
 		}
@@ -79,7 +79,7 @@ function Get-DisconnectedPeerings {
 		}
 	}
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

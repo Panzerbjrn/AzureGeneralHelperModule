@@ -30,7 +30,7 @@ function List-AzContexts {
 		[string]$AzContext
 	)
 
-	if ($AzContext) {
+	IF($AzContext) {
 		Get-AzContext -Name $AzContext | Select-Object * -Force
 	}
 	else {

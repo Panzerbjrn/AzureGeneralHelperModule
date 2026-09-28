@@ -50,18 +50,18 @@ function List-AzContainerContents {
 		[string]$AzStoragecontainer
 	)
 
-	begin {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 	}
 
-	process {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-        if ($AzSubscription) {
+        IF($AzSubscription) {
             Set-AzContext -Subscription $AzSubscription | Out-null
         }
 
-		if (!$AzResourceGroup) {
+		IF(!$AzResourceGroup) {
 			$Menu = @{}
         	$Items = Get-AzResourceGroup | Sort-Object -Property ResourceGroupName
 			for ($i=1;$i -le $Items.count; $i++) {
@@ -73,10 +73,10 @@ function List-AzContainerContents {
 			$AzResourceGroup = $Menu.Item($ans)
 		}
 
-        if ($AzStorageAccount) {
+        IF($AzStorageAccount) {
 			$AzStorageAccount = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount
 		}
-		if (!$AzStorageAccount) {
+		IF(!$AzStorageAccount) {
 			$Menu = @{}
         	$Items = Get-AzStorageAccount -ResourceGroupName $AzResourceGroup | Sort-Object -Property StorageAccountName
 			for ($i=1;$i -le $Items.count; $i++) {
@@ -88,10 +88,10 @@ function List-AzContainerContents {
 			$AzStorageAccount = $Menu.Item($ans)
 		}
 
-        if ($AzStoragecontainer) {
+        IF($AzStoragecontainer) {
             $AzStoragecontainer = Get-AzStorageContainer -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context -Name $AzStoragecontainer | Select-Object -ExpandProperty Name
         }
-        if (!$AzStoragecontainer) {
+        IF(!$AzStoragecontainer) {
 			$Menu = @{}
         	$Items = Get-AzStorageContainer -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context | Sort-Object -Property Name
 			for ($i=1;$i -le $Items.count; $i++) {
@@ -106,7 +106,7 @@ function List-AzContainerContents {
         Get-AzStorageBlob -Context (Get-AzStorageAccount -ResourceGroupName $AzResourceGroup -Name $AzStorageAccount).Context -Container $AzStoragecontainer | Select-Object -ExpandProperty Name
     }
 
-	end {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

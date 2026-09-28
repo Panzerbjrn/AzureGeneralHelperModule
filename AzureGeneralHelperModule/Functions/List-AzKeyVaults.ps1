@@ -53,13 +53,11 @@ function List-AzKeyVaults {
         Get-AzSubscription | Select-Object -ExpandProperty Id | ForEach-Object {
             $KVaults += Get-AzKeyVault -SubscriptionId $_
         }
-    }
-    ELSEIF($AzSubscription) {
+    }ELSEIF($AzSubscription) {
         Get-AzSubscription -SubscriptionName $AzSubscription | Select-Object -ExpandProperty Id | ForEach-Object {
             $KVaults += Get-AzKeyVault -SubscriptionId $_
         }
-    }
-    ELSEIF($Ask) {
+    }ELSEIF($Ask) {
         $Menu = @{}
         $Items =  Get-AzSubscription | Select-Object Name,Id | Sort-Object -Property Name
         for ($i=1;$i -le $Items.count; $i++) {
@@ -73,8 +71,7 @@ function List-AzKeyVaults {
         Write-OutPut $AzSub.Name
         Write-OutPut $AzSub.Id
         $KVaults = Get-AzKeyVault -SubscriptionId $AzSub.Id
-    }
-    else {
+	}ELSE {
         $KVaults = Get-AzKeyVault
     }
 

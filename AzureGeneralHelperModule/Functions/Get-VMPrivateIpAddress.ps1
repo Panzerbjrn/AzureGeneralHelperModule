@@ -61,8 +61,7 @@ function Get-VMPrivateIpAddress {
             $IPConfig = $NIC.IpConfigurations | Select-Object -First 1
 
             return $IPConfig.PrivateIpAddress
-        }
-        CATCH{
+        }CATCH{
             Write-Error "Error retrieving private IP address for VM '$VMName': $($_.Exception.Message)"
             throw
         }

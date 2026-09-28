@@ -130,7 +130,7 @@ ResourceContainers
             $FormattedResults = @()
             $SubscriptionCache = @{}
 
-            foreach ($Result in $Results) {
+            ForEach ($Result in $Results) {
                 # Cache subscription names to avoid repeated lookups
                 IF(-not $SubscriptionCache.ContainsKey($Result.subscriptionId)) {
                     $SubName = (Get-AzSubscription -SubscriptionId $Result.subscriptionId -ErrorAction SilentlyContinue).Name
@@ -166,8 +166,7 @@ ResourceContainers
             }
 
             return $FormattedResults
-        }
-        CATCH{
+        }CATCH{
             Write-Error "Failed to search for resource group: $($_.Exception.Message)"
         }
     }

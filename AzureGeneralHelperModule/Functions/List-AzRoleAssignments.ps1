@@ -89,7 +89,7 @@ function List-AzRoleAssignments {
 	}
 
 	Write-Verbose "There are $($AzRoleAssignments.count) Az Role Assignments"
-	foreach ($AzRoleAssignment in $AzRoleAssignments) {
+	ForEach ($AzRoleAssignment in $AzRoleAssignments) {
 		#$AzRoleAssignment
 		#$AzRoleAssignment.DisplayName
 		$Output.Add($([pscustomobject]@{

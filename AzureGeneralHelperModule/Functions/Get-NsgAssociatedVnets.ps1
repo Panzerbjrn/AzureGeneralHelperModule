@@ -77,7 +77,7 @@ function Get-NsgAssociatedVnets {
             IF($Nsg.Subnets -and $Nsg.Subnets.Count -gt 0) {
                 Write-Host "Associated Subnets ($($Nsg.Subnets.Count)):" -ForegroundColor Green
 
-                foreach ($subnetRef in $Nsg.Subnets) {
+                ForEach ($subnetRef in $Nsg.Subnets) {
                     # Parse the subnet resource ID to extract VNET and subscription info
                     $subnetId = $subnetRef.Id
                     $idParts = $subnetId -split '/'
@@ -111,7 +111,7 @@ function Get-NsgAssociatedVnets {
             IF($Nsg.NetworkInterfaces -and $Nsg.NetworkInterfaces.Count -gt 0) {
                 Write-Host "Associated Network Interfaces ($($Nsg.NetworkInterfaces.Count)):" -ForegroundColor Green
 
-                foreach ($nicRef in $Nsg.NetworkInterfaces) {
+                ForEach ($nicRef in $Nsg.NetworkInterfaces) {
                     $nicId = $nicRef.Id
                     $idParts = $nicId -split '/'
 
@@ -125,7 +125,7 @@ function Get-NsgAssociatedVnets {
                     TRY{
                         $nic = Get-AzNetworkInterface -ResourceGroupName $nicRg -Name $nicName -ErrorAction Stop
 
-                        foreach ($ipConfig in $nic.IpConfigurations) {
+                        ForEach ($ipConfig in $nic.IpConfigurations) {
                             IF($ipConfig.Subnet) {
                                 $subnetId = $ipConfig.Subnet.Id
                                 $subnetIdParts = $subnetId -split '/'

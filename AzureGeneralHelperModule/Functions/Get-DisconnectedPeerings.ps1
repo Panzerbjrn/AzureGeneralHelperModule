@@ -73,8 +73,7 @@ function Get-DisconnectedPeerings {
 		IF($DisconnectedPeerings) {
 			Write-Verbose "Found $($DisconnectedPeerings.Count) disconnected peering(s)"
 			$DisconnectedPeerings
-		}
-		else {
+		}ELSE {
 			Write-Verbose "No disconnected peerings found"
 		}
 	}

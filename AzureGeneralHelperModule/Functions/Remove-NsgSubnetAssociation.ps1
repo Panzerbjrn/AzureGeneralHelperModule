@@ -168,12 +168,10 @@ function Remove-NsgSubnetAssociation {
 				}
 
 				return $Result
-			}
-			else {
+			}CATCH {
 				Write-Host "Operation cancelled by user." -ForegroundColor Yellow
 			}
-		}
-		CATCH{
+		}CATCH{
 			Write-Error "Error removing NSG association: $($_.Exception.Message)"
 			throw
 		}

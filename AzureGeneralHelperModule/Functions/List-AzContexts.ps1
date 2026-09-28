@@ -32,8 +32,7 @@ function List-AzContexts {
 
 	IF($AzContext) {
 		Get-AzContext -Name $AzContext | Select-Object * -Force
-	}
-	else {
+	}ELSE {
 		Get-AzContext -ListAvailable | Sort-Object -Property Name
 	}
 }

@@ -93,8 +93,7 @@ function List-AzRGRoleAssignments {
         IF($AzResourceGroup) {
             $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)/resourceGroups/$AzResourceGroup" |
             Where-Object { -not $_.Inherited }
-        }
-        else {
+        }ELSE {
             $AzRoleAssignments = Get-AzRoleAssignment -Scope "/subscriptions/$($AzSub.Id)"
         }
     }
@@ -111,7 +110,7 @@ function List-AzRGRoleAssignments {
     }
 
 	Write-Verbose "There are $($AzRoleAssignments.count) Az Role Assignments"
-	foreach ($AzRoleAssignment in $AzRoleAssignments) {
+	ForEach ($AzRoleAssignment in $AzRoleAssignments) {
 		#$AzRoleAssignment
 		#$AzRoleAssignment.DisplayName
 		$Output.Add($([pscustomobject]@{

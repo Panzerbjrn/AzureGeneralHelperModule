@@ -142,8 +142,7 @@ function Add-AzVMUserAssignedIdentity {
                 Write-Verbose "Retrieving managed identity: $IdentityName from Resource Group: $IdentityResourceGroup"
                 $Identity = Get-AzUserAssignedIdentity -ResourceGroupName $IdentityResourceGroup -Name $IdentityName -ErrorAction Stop
                 $IdentityResourceId = $Identity.Id
-            }
-            else {
+            }ELSE {
                 # Validate the provided resource ID
                 Write-Verbose "Using provided identity resource ID: $IdentityResourceId"
             }
@@ -164,13 +163,11 @@ function Add-AzVMUserAssignedIdentity {
                 # No identity exists, create UserAssigned identity type
                 Write-Verbose "VM has no identity, creating UserAssigned identity type"
                 $VM = Update-AzVM -ResourceGroupName $ResourceGroupName -VM $VM -IdentityType UserAssigned -IdentityId $IdentityResourceId -ErrorAction Stop
-            }
-            ELSEIF($VM.Identity.Type -eq "SystemAssigned") {
+            }ELSEIF($VM.Identity.Type -eq "SystemAssigned") {
                 # VM has system-assigned identity, change to SystemAssigned,UserAssigned
                 Write-Verbose "VM has SystemAssigned identity, changing to SystemAssigned,UserAssigned"
                 $VM = Update-AzVM -ResourceGroupName $ResourceGroupName -VM $VM -IdentityType "SystemAssigned,UserAssigned" -IdentityId $IdentityResourceId -ErrorAction Stop
-            }
-            else {
+            }ELSE {
                 # VM already has user-assigned identities, add to the collection
                 Write-Verbose "Adding identity to existing user-assigned identities"
                 $VM = Update-AzVM -ResourceGroupName $ResourceGroupName -VM $VM -IdentityType UserAssigned -IdentityId $IdentityResourceId -ErrorAction Stop
@@ -183,7 +180,7 @@ function Add-AzVMUserAssignedIdentity {
 
             IF($UpdatedVM.Identity -and $UpdatedVM.Identity.UserAssignedIdentities) {
                 Write-Host "`nCurrent User-Assigned Identities ($($UpdatedVM.Identity.UserAssignedIdentities.Count)):" -ForegroundColor Cyan
-                foreach ($identity in $UpdatedVM.Identity.UserAssignedIdentities.GetEnumerator()) {
+                ForEach ($identity in $UpdatedVM.Identity.UserAssignedIdentities.GetEnumerator()) {
                     $identityId = $identity.Key
                     $idParts = $identityId -split '/'
                     $identityName = $idParts[8]
@@ -194,8 +191,7 @@ function Add-AzVMUserAssignedIdentity {
             }
 
             return $UpdatedVM
-        }
-        CATCH{
+        }CATCH{
             Write-Error "Error adding user-assigned identity to VM: $($_.Exception.Message)"
             throw
         }

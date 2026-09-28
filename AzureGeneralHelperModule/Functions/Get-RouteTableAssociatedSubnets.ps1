@@ -101,7 +101,7 @@ function Get-RouteTableAssociatedSubnets {
             IF($RouteTable.Subnets -and $RouteTable.Subnets.Count -gt 0) {
                 Write-Host "Associated Subnets ($($RouteTable.Subnets.Count)):" -ForegroundColor Green
 
-                foreach ($subnetRef in $RouteTable.Subnets) {
+                ForEach ($subnetRef in $RouteTable.Subnets) {
                     # Parse the subnet resource ID to extract VNET and subscription info
                     $subnetId = $subnetRef.Id
                     $idParts = $subnetId -split '/'
@@ -127,15 +127,14 @@ function Get-RouteTableAssociatedSubnets {
                         ResourceId        = $subnetId
                     }
                 }
-            }
-            else {
+            }CATCH {
                 Write-Host "No subnets are associated with this Route Table.`n" -ForegroundColor Yellow
             }
 
             # Display route summary
             IF($RouteTable.Routes -and $RouteTable.Routes.Count -gt 0) {
                 Write-Host "Routes in this Route Table ($($RouteTable.Routes.Count)):" -ForegroundColor Green
-                foreach ($route in $RouteTable.Routes) {
+                ForEach ($route in $RouteTable.Routes) {
                     Write-Host "  - $($route.Name): $($route.AddressPrefix) -> $($route.NextHopType)" -ForegroundColor Magenta
                     IF($route.NextHopIpAddress) {
                         Write-Host "    Next Hop IP: $($route.NextHopIpAddress)" -ForegroundColor Magenta
@@ -150,14 +149,12 @@ function Get-RouteTableAssociatedSubnets {
                 $subnetInfo | Format-Table -Property VNetName, SubnetName, ResourceGroup -AutoSize
 
                 return $subnetInfo
-            }
-            else {
+            }ELSE {
                 Write-Host "No subnet associations found for this Route Table." -ForegroundColor Red
                 return $null
             }
 
-        }
-        CATCH{
+        }CATCH{
             Write-Error "Error retrieving Route Table associations: $($_.Exception.Message)"
             throw
         }

@@ -68,15 +68,13 @@ function List-AzComputeResourceSku {
 
     IF($AzLocation) {
         $Skus = Get-AzComputeResourceSku -Location $AzLocation
-    }
-    else {
+    }ELSE {
         $Skus = Get-AzComputeResourceSku
     }
 
     IF($AzResourceType) {
         $Skus | Where-Object { $_.ResourceType -match $AzResourceType }
-    }
-    else {
+    }ELSE {
         $Skus
     }
 }

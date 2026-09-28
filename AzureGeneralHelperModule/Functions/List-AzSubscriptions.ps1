@@ -39,8 +39,7 @@ function List-AzSubscriptions {
 
         IF($AzSubscription) {
             Get-AzSubscription -SubscriptionName $AzSubscription | Select-Object -ExpandProperty Name | Sort-Object
-        }
-        else {
+        }ELSE {
             Get-AzSubscription | Select-Object -ExpandProperty Name | Sort-Object
         }
     }

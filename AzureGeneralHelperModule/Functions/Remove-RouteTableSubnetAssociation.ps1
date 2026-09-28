@@ -168,12 +168,10 @@ function Remove-RouteTableSubnetAssociation {
 				}
 
 				return $Result
-			}
-			else {
+			}CATCH {
 				Write-Host "Operation cancelled by user." -ForegroundColor Yellow
 			}
-		}
-		CATCH{
+		}CATCH{
 			Write-Error "Error removing Route Table association: $($_.Exception.Message)"
 			throw
 		}

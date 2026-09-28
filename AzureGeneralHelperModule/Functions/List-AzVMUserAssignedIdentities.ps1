@@ -102,7 +102,7 @@ function List-AzVMUserAssignedIdentities {
                 IF($VM.Identity.UserAssignedIdentities -and $VM.Identity.UserAssignedIdentities.Count -gt 0) {
                     Write-Host "`nUser-Assigned Identities ($($VM.Identity.UserAssignedIdentities.Count)):" -ForegroundColor Green
 
-                    foreach ($identity in $VM.Identity.UserAssignedIdentities.GetEnumerator()) {
+                    ForEach ($identity in $VM.Identity.UserAssignedIdentities.GetEnumerator()) {
                         $identityId = $identity.Key
                         $identityProperties = $identity.Value
 
@@ -135,21 +135,18 @@ function List-AzVMUserAssignedIdentities {
                     $identityInfo | Format-Table -Property IdentityName, ResourceGroup, PrincipalId, ClientId -AutoSize
 
                     return $identityInfo
-                }
-                else {
+                }ELSE {
                     Write-Host "`nNo user-assigned identities found on this VM." -ForegroundColor Yellow
                     IF($identityType -eq "SystemAssigned") {
                         Write-Host "This VM has a System-Assigned identity only." -ForegroundColor Yellow
                     }
                     return $null
                 }
-            }
-            else {
+            }CATCH {
                 Write-Host "`nNo managed identities found on this VM." -ForegroundColor Yellow
                 return $null
             }
-        }
-        CATCH{
+        }CATCH{
             Write-Error "Error retrieving VM identities: $($_.Exception.Message)"
             throw
         }
